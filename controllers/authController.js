@@ -5,7 +5,7 @@ import { createCookie } from "../utils/index.js";
 
 export const registerUser = async (req, res) => {
   const { name, email, password } = req?.body;
-  console.log(req.body);
+  // console.log(req.body);
   if (!name || !email || !password)
     throw new BadRequestError("Please provide the required fields");
   // check if the email adready exists

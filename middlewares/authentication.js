@@ -9,7 +9,7 @@ const authUserMiddleware = async (req, res, next) => {
   try {
     const userPayload = await verifyAccessToken(accessToken);
     req.user = {
-      userId: userPayload.userdId,
+      userId: userPayload.userId,
       userName: userPayload.name,
       userRole: userPayload.role,
     };
