@@ -1,9 +1,10 @@
-import authUserMiddleware from "./authentication.js";
+import { authUserMiddleware, authorizePermission} from "./authentication.js";
 import errorHandlerMiddleware from "./error-handler.js"
 import notFound from "./not-found.js";
 
 export {
     authUserMiddleware,
     errorHandlerMiddleware,
-    notFound
+    notFound,
+    authorizePermission
 }

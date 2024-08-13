@@ -45,7 +45,7 @@ export const loginUser = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   //set access token value to logout
-  res.cookie("access-token", "logout", {
+  res.cookie("accessToken", "logout", {
     httpOnly: true,
     expires: new Date(Date.now() + 1000),
   });

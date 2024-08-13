@@ -1,4 +1,4 @@
-import { UnauthenticatedError } from "../errors/index.js";
+import { UnauthenticatedError, UnauthorizedError } from "../errors/index.js";
 import { verifyAccessToken } from "../utils/index.js";
 
 const authUserMiddleware = async (req, res, next) => {
@@ -21,4 +21,15 @@ const authUserMiddleware = async (req, res, next) => {
   }
 };
 
-export default authUserMiddleware;
+const authorizePermission = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.userRole)) {
+      throw new UnauthorizedError(
+        "Unauthorized to access this url"
+      );
+    }
+    next();
+  };
+};
+
+export { authUserMiddleware, authorizePermission };
