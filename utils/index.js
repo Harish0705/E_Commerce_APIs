@@ -1,6 +1,7 @@
-import { creatJwtToken, createCookie } from "./jwt.js";
+import { creatJwtToken, createCookie, verifyAccessToken } from "./jwt.js";
 
 export {
     createCookie,
-    creatJwtToken
+    creatJwtToken,
+    verifyAccessToken
 }

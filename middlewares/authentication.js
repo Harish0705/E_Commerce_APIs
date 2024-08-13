@@ -1,18 +1,18 @@
-import { User } from "../models/userSchema.js";
-import jwt from "jsonwebtoken";
 import { UnauthenticatedError } from "../errors/index.js";
+import { verifyAccessToken } from "../utils/index.js";
 
-const authMiddleware = async (req, res, next) => {
-  const authorizationHeader = req.headers.authorization;
-  if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
-    throw new UnauthenticatedError("Invalid Authorization request");
+const authUserMiddleware = async (req, res, next) => {
+  const accessToken = req.signedCookies.accessToken;
+  if (!accessToken) {
+    throw new UnauthenticatedError("Invalid credentials");
   }
-  const authToken = authorizationHeader.split(" ")[1];
   try {
-    const userPayload = jwt.verify(authToken, process.env.JWT_SECRET);
-    // console.log(userPayload);
-    // attach the user to job routes
-    req.user = { userId: userPayload.userdId, userName: userPayload.userName };
+    const userPayload = await verifyAccessToken(accessToken);
+    req.user = {
+      userId: userPayload.userdId,
+      userName: userPayload.name,
+      userRole: userPayload.role,
+    };
     // console.log(req.user);
     next();
   } catch (err) {
@@ -21,4 +21,4 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+export default authUserMiddleware;
