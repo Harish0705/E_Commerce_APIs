@@ -11,7 +11,9 @@ export const createProduct = async (req, res) => {
 export const getOneProduct = async (req, res) => {
   const { params: { id = "" } = "" } = req || {};
 
-  const product = await Product.findOne({ _id: id });
+  // const product = await Product.findOne({ _id: id });
+  // populate reviews using mongodb virtuals
+  const product = await Product.findOne({ _id: id }).populate('reviews');
 
   if (!product) {
     throw new NotFoundError(`No product found with id : ${id}`);
