@@ -53,9 +53,9 @@ export const updateReview = async (req, res) => {
   if (!review) {
     throw new NotFoundError(`No review found with id : ${reviewId}`);
   }
-  validatePermission(req.user,review.user);
-  if(rating)review.rating = rating;
-  if(comment)review.comment = comment;
+  validatePermission(req.user, review.user);
+  if (rating) review.rating = rating;
+  if (comment) review.comment = comment;
   //
   await review.save();
   res.status(StatusCodes.OK).json({ review });
@@ -67,8 +67,17 @@ export const deleteReview = async (req, res) => {
   if (!review) {
     throw new NotFoundError(`No review found with id : ${reviewId}`);
   }
-  validatePermission(req.user,review.user);
+  validatePermission(req.user, review.user);
   //
   await review.deleteOne();
   res.sendStatus(StatusCodes.NO_CONTENT);
+};
+
+export const getSingleProductReviews = async (req, res) => {
+  const { id: productId = "" } = req.params;
+  const review = await Review.find({ product: productId });
+  if (!review) {
+    throw new NotFoundError(`No review found for this product : ${productId}`);
+  }
+  res.status(StatusCodes.OK).json({ review });
 };
