@@ -27,7 +27,23 @@ const userSchema = mongoose.Schema({
     type:String,
     enum:['admin', 'user'],
     default:'user'
-  }
+  },
+  emailVerificationToken: {
+    type: String
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verifiedDate: {
+    type: Date
+  },
+  restPasswordToken: {
+    type: String,
+  },
+  restPasswordTokenExp: {
+    type: Date,
+  },
 });
 
 // use function inseated of arrow funtion to keep the scope with this schema
