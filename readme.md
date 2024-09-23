@@ -4,7 +4,7 @@ E_Commerce APIs with the following functionalities
  2. User routes: Retrive user data, update user email name and password
  3. Product routes: Product related CRUD operations
  4. Review routes: Review related CRUD operations
- 5. Review routes: Order related CRU operations
+ 5. Order routes: Order related CRU operations
  6. Error handling
  7. Connecting User, Product, Review and Order models using Mongodb populate, virtuals and aggregation pipeline.
 
