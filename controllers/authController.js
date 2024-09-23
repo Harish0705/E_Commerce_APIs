@@ -5,6 +5,7 @@ import { BadRequestError, UnauthenticatedError } from "../errors/index.js";
 import {
   createCookie,
   sendVerificationEmail,
+  sendResetPasswordEmail,
   hashToken,
 } from "../utils/index.js";
 import crypto from "crypto";
@@ -96,6 +97,7 @@ export const loginUser = async (req, res) => {
 };
 
 export const logoutUser = async (req, res) => {
+  console.log(req.user)
   await Token.findOneAndDelete({ user: req.user.userId });
 
   res.cookie("accessToken", "logout", {
@@ -133,10 +135,54 @@ export const verifyEmail = async (req, res) => {
     .json({ msg: "Your Email is Verified. Please log in to continue" });
 };
 export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new BadRequestError('Please provide valid email');
+  }
+
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const passwordToken = crypto.randomBytes(70).toString('hex');
+  
+    await sendResetPasswordEmail({
+      name: user.name,
+      email: user.email,
+      token: passwordToken,
+      origin: "http://localhost:3000",
+    });
+
+    const expTime = 1000 * 60 * 10;
+    const passwordTokenExpirationDate = new Date(Date.now() + expTime);
+
+    user.restPasswordToken = hashToken(passwordToken);
+    user.restPasswordTokenExp = passwordTokenExpirationDate;
+    await user.save();
+  }
   res
     .status(StatusCodes.OK)
     .json({ msg: "Please check your email for reset password link" });
 };
+
 export const resetPassword = async (req, res) => {
+  const { token, email, password } = req.body;
+  if (!token || !email || !password) {
+    throw new BadRequestError('Please provide all values');
+  }
+  const user = await User.findOne({ email });
+
+  if (user) {
+    const currentDate = new Date();
+
+    if (
+      user.restPasswordToken === hashToken(token) &&
+      user.restPasswordTokenExp > currentDate
+    ) {
+      user.password = password;
+      user.passwordToken = null;
+      user.restPasswordTokenExp = null;
+      await user.save();
+    }
+  }
   res.send("reset password");
 };
