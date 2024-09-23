@@ -1,0 +1,40 @@
+import nodemailer from "nodemailer";
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false, // true for port 465, false for other ports
+  auth: {
+    user: "mable81@ethereal.email",
+    pass: "6fEt3WHnPjs97jHs36",
+  },
+});
+
+export const sendEmail = async ({ to, subject, html }) => {
+  const info = await transporter.sendMail({
+    from: '"Mable Armstrong" <mable81@ethereal.email>',
+    to,
+    subject,
+    html,
+  });
+};
+
+export const sendVerificationEmail = async ({
+  name,
+  email,
+  emailVerificationToken,
+  origin,
+}) => {
+  const verifyEmail = `${origin}/user/verify-email?token=${emailVerificationToken}&email=${email}`;
+
+  const message = `<p>Please confirm your email by clicking on the following link : 
+    <a href="${verifyEmail}">Verify Email</a> </p>`;
+
+  return sendEmail({
+    to: email,
+    subject: "Email Confirmation",
+    html: `<h4> Hello, ${name}</h4>
+      ${message}
+      `,
+  });
+};

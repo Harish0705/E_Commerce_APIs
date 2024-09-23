@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.2",
     "lodash.isempty": "^4.4.0",
     "mongoose": "^8.5.2",
+    "nodemailer": "^6.9.15",
     "validator": "^13.12.0"
   }
 }
